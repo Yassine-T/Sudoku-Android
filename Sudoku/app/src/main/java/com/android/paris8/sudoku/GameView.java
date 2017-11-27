@@ -13,35 +13,36 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
 
     private static int[][] matrice;
+    int val = 9;
 
     private Paint contour;
     private Paint bigContour;
     private Paint text;
     private Paint cell;
 
-    boolean val = false;
-
     private int hauteur = 50, largeur = 50;
     private int cases;
 
     private boolean in = true;
-    DrawingThread mThread;
+    Thread mThread;
     SurfaceHolder mSurfaceHolder;
 
     public GameView(Context context) {
 
         super(context);
         init();
+        mThread = new Thread(this);
         setFocusable(true);
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+        mThread = new Thread(this);
         setFocusable(true);
 
     }
@@ -49,26 +50,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+        mThread = new Thread(this);
         setFocusable(true);
     }
 
 
 
-
-    /*public GameView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        // permet d'ecouter les surfaceChanged, surfaceCreated, surfaceDestroyed
-        holder = getHolder();
-        holder.addCallback(this);
-
-        initparameters();
-
-        // creation du thread
-        cv_thread = new Thread(this);
-        // prise de focus pour gestion des touches
-        setFocusable(true);
-    }*/
 
 
     private void init() {
@@ -89,37 +76,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         cell.setTextSize(70);
         text = new Paint();
         text.setColor(Color.BLACK);
-        text.setTextSize(70);
+        text.setTextSize(100);
+        text.setFakeBoldText(true);
 
-        mThread = new DrawingThread();
-
-    }
-
-
-    // initialisation du jeu
-    public void initparameters() {
-        matrice = new int[9][9];
-
-        contour = new Paint();
-        contour.setColor(Color.BLACK);
-        contour.setStrokeWidth(3);
-        bigContour = new Paint();
-        bigContour.setColor(Color.BLACK);
-        bigContour.setStrokeWidth(10);
-        cell = new Paint();
-        cell.setColor(Color.GRAY);
-        cell.setTextSize(70);
-        text = new Paint();
-        text.setColor(Color.BLACK);
-        text.setTextSize(70);
-
-
-
-        /*if ((cv_thread != null) && (!cv_thread.isAlive())) {
-            cv_thread.start();
+        if ((mThread != null) && (!mThread.isAlive())) {
+            mThread.start();
             Log.e("-FCT-", "cv_thread.start()");
-        }*/
-        //paintGrid(canvas);
+        }
+
     }
 
 
@@ -129,12 +93,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         paintGrid(canvas);
 
-        if (val == true) {
-            canvas.drawText("0", cases / 5, cases * 4 / 5, text);
-        }
+            canvas.drawText(matrice[x][y] + "", cases * 2 / 8, cases - cases / 6, text);
 
 
-        Log.d("Yassine", "Erreur");
+
+        Log.d("Yassine", "onDraw");
 
     }
 
@@ -166,19 +129,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }*/
         }
 
-        Log.d("Yassine", "Erreur");
+
     }
 
     // dessin du jeu (fond uni, en fonction du jeu gagne ou pas dessin du plateau et du joueur des diamants et des fleches)
-    private void nDraw(Canvas canvas) {
+    /*private void nDraw(Canvas canvas) {
 
         paintGrid(canvas);
-    }
+
+        if (val == true) {
+            canvas.drawText("0", cases / 5, cases * 4 / 5, text);
+        }
+
+
+        Log.d("Yassine", "Erreur");
+        Log.d("Yassine", "nDraw");
+
+    }*/
 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i("-> FCT <-", "surfaceCreated");
+        //mThread.keepDrawing = true;
+        //mThread.start();
     }
 
     @Override
@@ -190,57 +164,54 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.i("-> FCT <-", "surfaceDestroyed");
+        /*mThread.keepDrawing = false;
+
+        boolean joined = false;
+        while (!joined) {
+            try {
+                mThread.join();
+                joined = true;
+            } catch (InterruptedException e) {}
+        }*/
     }
 
-
+    int x, y;
     // fonction permettant de recuperer les evenements tactiles
     public boolean onTouchEvent(MotionEvent event) {
         Canvas c = null;
         Log.i("-> FCT <-", "onTouchEvent: " + event.getX());
         //float x = event.getX();
         //float y = event.getY();
-        int x = (int) event.getX() / cases;
-        int y = (int) event.getY() / cases;
+        x = (int) event.getX() / cases;
+        y = (int) event.getY() / cases;
         Toast.makeText(getContext(), "x = " + x + " y = " + y, Toast.LENGTH_SHORT).show();
 
-        if (x == 0 && y == 0) {
-            val = true;
-        }
+        matrice[x][y] = val;
 
+        invalidate();
 
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void run() {
 
-    private class DrawingThread extends Thread {
-        // Utilisé pour arrêter le dessin quand il le faut
-        boolean keepDrawing = true;
-
-        @Override
-        public void run() {
-
-            while (keepDrawing) {
-                Canvas canvas = null;
-
+        Canvas c = null;
+        while (in) {
+            try {
+                mThread.sleep(40);
                 try {
-                    // On récupère le canvas pour dessiner dessus
-                    canvas = mSurfaceHolder.lockCanvas();
-                    // On s'assure qu'aucun autre thread n'accède au holder
-                    synchronized (mSurfaceHolder) {
-                        // Et on dessine
-                        onDraw(canvas);
-                    }
+                    c = mSurfaceHolder.lockCanvas(null);
+                    //if (c!=null)
+                    //nDraw(c);
                 } finally {
-                    // Notre dessin fini, on relâche le Canvas pour que le dessin s'affiche
-                    if (canvas != null)
-                        mSurfaceHolder.unlockCanvasAndPost(canvas);
+                    if (c != null) {
+                        mSurfaceHolder.unlockCanvasAndPost(c);
+                    }
                 }
-
-                // Pour dessiner à 50 fps
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("-> RUN <-", "PB DANS RUN");
             }
         }
     }
