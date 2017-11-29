@@ -19,12 +19,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
 
     private static int[][] matrice;
-    int val = 9;
+    private static boolean[][] isSelected;
+    int val = 0;
 
     private Paint contour;
     private Paint bigContour;
     private Paint text;
     private Paint cell;
+    private Paint selectCaseContour;
+    private Paint selectCaseBackground;
+    private Paint selectBlocBackground;
     Paint caseBloque;
 
     private int hauteur = 50, largeur = 50;
@@ -80,10 +84,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         mSurfaceHolder.addCallback(this);
 
         matrice = new int[9][9];
+        isSelected = new boolean[9][9];
 
         contour = new Paint();
         contour.setColor(Color.BLACK);
-        contour.setStrokeWidth(3);
+        contour.setStrokeWidth(5);
         bigContour = new Paint();
         bigContour.setColor(Color.BLACK);
         bigContour.setStrokeWidth(10);
@@ -97,10 +102,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         caseBloque = new Paint();
         caseBloque.setColor(Color.GRAY);
 
+        selectCaseContour = new Paint();
+        selectCaseContour.setColor(Color.BLACK);
+        selectCaseContour.setStrokeWidth(15);
+
+        selectCaseBackground = new Paint();
+        selectCaseBackground.setColor(Color.BLUE);
+        selectCaseBackground.setStyle(Paint.Style.FILL);
+
+        selectBlocBackground = new Paint();
+        selectBlocBackground.setColor(Color.YELLOW);
+        selectBlocBackground.setStyle(Paint.Style.FILL);
+        selectBlocBackground.setAlpha(100);
+
+
 
         for(int i=0;i<9;i++){
+
             for(int j=0;j<9;j++){
-                matrice[i][j]=level[i][j];
+                matrice[j][i]=level[j][i];
+                //Log.d("LEVEL", matrice[i][j] + "");
 
             }
         }
@@ -116,34 +137,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override
     protected void onDraw(Canvas canvas) {
 
+        Paint background = new Paint();
+        background.setColor(Color.WHITE);
+        canvas.drawRect(0, 0, getWidth(), getWidth(), background);
+
+
+        paintCaseBloquer(canvas);
+        paintCaseSelected(canvas);
+        paintNumber(canvas);
 
         paintGrid(canvas);
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (matrice[i][j] == 0) continue;
-                String res = String.valueOf(matrice[i][j]);
-                canvas.drawText(res, i * cases + cases / 4, j * cases + cases * 4 / 5, text);
 
-            }
-        }
 
         Log.d("Yassine", "onDraw");
 
     }
 
     private void paintGrid(Canvas canvas) {
-        Paint background = new Paint();
-        background.setColor(Color.WHITE);
-        canvas.drawRect(0, 0, getWidth(), getWidth(), background);
 
-        for(int j=0;j<9;j++){
-            for(int k=0;k<9;k++){
-                if (level[j][k] != 0)
-                    canvas.drawRect(j, k, j * cases, k * cases, caseBloque);
-
-            }
-        }
 
 
         hauteur = this.getMeasuredHeight();
@@ -162,29 +174,105 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 canvas.drawLine(0, i * cases, largeur, i * cases, contour);
             }
 
-
-
-
-
         }
 
 
     }
 
-    // dessin du jeu (fond uni, en fonction du jeu gagne ou pas dessin du plateau et du joueur des diamants et des fleches)
-    /*private void nDraw(Canvas canvas) {
 
-        paintGrid(canvas);
+    private void paintCaseSelected(Canvas canvas) {
 
-        if (val == true) {
-            canvas.drawText("0", cases / 5, cases * 4 / 5, text);
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (isSelected[j][i] == false) continue;
+
+                canvas.drawRect(0, j * cases, getWidth(), j * cases + cases, selectBlocBackground);
+                canvas.drawRect(i * cases, 0, i * cases + cases, getWidth(), selectBlocBackground);
+
+
+                // Ranger 1
+                if (i < 3 && j < 3) {
+                     canvas.drawRect(0, 0, cases * 3, cases * 3, selectBlocBackground);
+                }
+
+                if (i < 3 && (j >= 3 && j < 6)) {
+                    canvas.drawRect(0, 3 * cases, cases * 3, 3 * cases * 2, selectBlocBackground);
+                }
+
+                if (i < 3 && (j >= 6 && j < 9)) {
+                    canvas.drawRect(0, 6 * cases, cases * 3, 3 * cases * 3, selectBlocBackground);
+                }
+
+                // Ranger 2
+
+                if ((i >= 3 && i < 6) && j < 3) {
+                    canvas.drawRect(3 * cases, 0, 3 * cases * 2, cases * 3, selectBlocBackground);
+                }
+
+                if ((i >= 3 && i < 6) && (j >= 3 && j < 6)) {
+                    canvas.drawRect(3 * cases, 3 * cases, 3 * cases * 2, 3 * cases * 2, selectBlocBackground);
+                }
+
+                if ((i >= 3 && i < 6) && (j >= 6 && j < 9)) {
+                    canvas.drawRect(3 * cases, 6 * cases, 3 * cases * 2, 3 * cases * 3, selectBlocBackground);
+                }
+
+                // Ranger 3
+
+                if ((i >= 6 && i < 9) && j < 3) {
+                    canvas.drawRect(6 * cases, 0, 6 * cases * 2, cases * 3, selectBlocBackground);
+                }
+
+                if ((i >= 6 && i < 9) && (j >= 3 && j < 6)) {
+                    canvas.drawRect(6 * cases, 3 * cases, 6 * cases * 2, 3 * cases * 2, selectBlocBackground);
+                }
+
+                if ((i >= 6 && i < 9) && (j >= 6 && j < 9)) {
+                    canvas.drawRect(6 * cases, 6 * cases, 6 * cases * 2, 3 * cases * 3, selectBlocBackground);
+                }
+
+
+                    canvas.drawRect(i * cases, j * cases, i * cases + cases, j * cases + cases, selectCaseBackground);
+                    canvas.drawLine(i * cases + cases, j * cases, i * cases + cases, j * cases + cases, selectCaseContour); // Right
+                    canvas.drawLine(i * cases, j * cases + cases, i * cases + cases, j * cases + cases, selectCaseContour); // Bottom
+                    canvas.drawLine(i * cases, j * cases, i * cases, j * cases + cases, selectCaseContour); // Left
+                    canvas.drawLine(i * cases, j * cases, i * cases + cases, j * cases, selectCaseContour); // Top
+
+                }
+            }
+
+    }
+
+    private void paintNumber(Canvas canvas) {
+
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (matrice[j][i] == 0) continue;
+                String res = String.valueOf(matrice[j][i]);
+
+                canvas.drawText(res, i * cases + cases / 4, j * cases + cases * 4 / 5, text);
+
+
+            }
         }
+    }
+
+    private void paintCaseBloquer(Canvas canvas) {
 
 
-        Log.d("Yassine", "Erreur");
-        Log.d("Yassine", "nDraw");
+        for(int j=0;j<9;j++){
+            for(int k=0;k<9;k++){
 
-    }*/
+                if (level[j][k] != 0)
+                {
+                    canvas.drawRect(k * cases, j * cases, k * cases + cases, j * cases + cases, caseBloque);
+                }
+            }
+        }
+    }
+
 
 
     @Override
@@ -203,16 +291,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.i("-> FCT <-", "surfaceDestroyed");
-        /*mThread.keepDrawing = false;
 
-        boolean joined = false;
-        while (!joined) {
-            try {
-                mThread.join();
-                joined = true;
-            } catch (InterruptedException e) {}
-        }*/
     }
+
+
 
     int x, y;
     // fonction permettant de recuperer les evenements tactiles
@@ -225,10 +307,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         y = (int) event.getY() / cases;
         Toast.makeText(getContext(), "x = " + x + " y = " + y, Toast.LENGTH_SHORT).show();
 
+        for(int j=0;j<9;j++){
+            for(int k=0;k<9;k++){
+
+                isSelected[k][j] = false;
+
+            }
+        }
+
         if (event.getY() <= largeur)
         {
-            if (level[x][y] == 0)
-                matrice[x][y] = val;
+            isSelected[y][x] = true;
+            if (level[y][x] == 0)
+                matrice[y][x] = val;
+        }
+
+        for(int j=0;j<9;j++){
+            for(int k=0;k<9;k++){
+
+                Log.d("Case", isSelected[k][j] + "");
+            }
         }
 
         invalidate();
