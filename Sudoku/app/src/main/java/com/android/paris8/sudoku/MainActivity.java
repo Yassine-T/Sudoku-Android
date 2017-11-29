@@ -12,11 +12,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9;
     Button btn_gomme;
+    Button btn_checked[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        btn_checked = new Button[10];
 
         mGameView = (GameView) findViewById(R.id.GameView);
         mGameView.setVisibility(View.VISIBLE);
@@ -31,6 +34,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn8 = (Button) findViewById(R.id.btn8);            btn8.setOnClickListener(this);
         btn9 = (Button) findViewById(R.id.btn9);            btn9.setOnClickListener(this);
         btn_gomme = (Button) findViewById(R.id.btn_gomme);  btn_gomme.setOnClickListener(this);
+
+        btn_checked[0] = btn_gomme;
+        btn_checked[1] = btn1;
+        btn_checked[2] = btn2;
+        btn_checked[3] = btn3;
+        btn_checked[4] = btn4;
+        btn_checked[5] = btn5;
+        btn_checked[6] = btn6;
+        btn_checked[7] = btn7;
+        btn_checked[8] = btn8;
+        btn_checked[9] = btn9;
+
+
     }
 
     @Override
@@ -38,53 +54,110 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
 
             case R.id.btn1:
-                    mGameView.val = 1;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+                mGameView.val = 1;
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[1].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn2:
                 mGameView.val = 2;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[2].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn3:
                 mGameView.val = 3;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[3].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn4:
                 mGameView.val = 4;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[4].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn5:
                 mGameView.val = 5;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[5].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn6:
                 mGameView.val = 6;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[6].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn7:
                 mGameView.val = 7;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[7].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn8:
                 mGameView.val = 8;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[8].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn9:
                 mGameView.val = 9;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[9].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
 
             case R.id.btn_gomme:
                 mGameView.val = 0;
-                Toast.makeText(this, mGameView.val + "", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
+                }
+                btn_checked[0].setBackgroundResource(R.drawable.btn_checked);
+
                 break;
         }
     }

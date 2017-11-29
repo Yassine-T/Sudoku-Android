@@ -26,49 +26,60 @@
 
             <Button
                 android:id="@+id/btn1"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="1"/>
 
             <Button
                 android:id="@+id/btn2"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="2"/>
 
             <Button
                 android:id="@+id/btn3"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="3"/>
 
             <Button
                 android:id="@+id/btn4"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="4"/>
 
             <Button
                 android:id="@+id/btn5"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="5"/>
 
             <Button
                 android:id="@+id/btn6"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="6"/>
 
@@ -78,54 +89,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:layout_marginBottom="20dp">
 
             <Button
                 android:id="@+id/btn7"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="7"/>
 
             <Button
                 android:id="@+id/btn8"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="8"/>
 
             <Button
                 android:id="@+id/btn9"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="9"/>
 
             <Button
                 android:id="@+id/btn_gomme"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
-                android:text="G"/>
+                android:text="G" />
 
             <Button
                 android:id="@+id/btn_stylo"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="S"/>
 
             <Button
                 android:id="@+id/btn_digit"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:text="D"/>
         </LinearLayout>
