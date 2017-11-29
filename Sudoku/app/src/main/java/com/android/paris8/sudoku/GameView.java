@@ -11,9 +11,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+
 
 
     private static int[][] matrice;
@@ -23,6 +25,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Paint bigContour;
     private Paint text;
     private Paint cell;
+    Paint caseBloque;
 
     private int hauteur = 50, largeur = 50;
     private int cases;
@@ -30,6 +33,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private boolean in = true;
     Thread mThread;
     SurfaceHolder mSurfaceHolder;
+
+    final int[][] level= {
+            {0,3,7,0,6,1,2,9,0},
+            {9,2,5,4,3,0,0,6,1},
+            {0,0,0,0,0,0,7,5,0},
+            {0,5,0,0,4,6,9,0,0},
+            {3,0,9,0,0,0,6,0,2},
+            {0,0,4,2,9,0,0,7,0},
+            {0,9,2,0,0,0,0,0,0},
+            {5,1,0,0,7,9,4,2,6},
+            {0,6,8,3,2,0,5,1,0}
+    };
 
     public GameView(Context context) {
 
@@ -60,6 +75,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private void init() {
 
+
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
 
@@ -78,6 +94,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         text.setColor(Color.BLACK);
         text.setTextSize(100);
         text.setFakeBoldText(true);
+        caseBloque = new Paint();
+        caseBloque.setColor(Color.GRAY);
+
+
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                matrice[i][j]=level[i][j];
+
+            }
+        }
 
         if ((mThread != null) && (!mThread.isAlive())) {
             mThread.start();
@@ -93,9 +119,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         paintGrid(canvas);
 
-            canvas.drawText(matrice[x][y] + "", cases * 2 / 8, cases - cases / 6, text);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (matrice[i][j] == 0) continue;
+                String res = String.valueOf(matrice[i][j]);
+                canvas.drawText(res, i * cases + cases / 4, j * cases + cases * 4 / 5, text);
 
-
+            }
+        }
 
         Log.d("Yassine", "onDraw");
 
@@ -105,6 +136,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         Paint background = new Paint();
         background.setColor(Color.WHITE);
         canvas.drawRect(0, 0, getWidth(), getWidth(), background);
+
+        for(int j=0;j<9;j++){
+            for(int k=0;k<9;k++){
+                if (level[j][k] != 0)
+                    canvas.drawRect(j, k, j * cases, k * cases, caseBloque);
+
+            }
+        }
+
 
         hauteur = this.getMeasuredHeight();
         largeur = this.getMeasuredWidth();
@@ -123,10 +163,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
 
 
-            /*if (val == true)
-            {
-                canvas.drawText("0", cases / 5, cases * 4 / 5, text);
-            }*/
+
+
+
         }
 
 
@@ -186,7 +225,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         y = (int) event.getY() / cases;
         Toast.makeText(getContext(), "x = " + x + " y = " + y, Toast.LENGTH_SHORT).show();
 
-        matrice[x][y] = val;
+        if (event.getY() <= largeur)
+        {
+            if (level[x][y] == 0)
+                matrice[x][y] = val;
+        }
 
         invalidate();
 
@@ -215,6 +258,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
     }
+
 }
 
 
