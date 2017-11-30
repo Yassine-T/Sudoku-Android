@@ -13,11 +13,12 @@ import android.widget.Toast;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
+    Checker checker;
 
-
-    private static int[][] matrice;
+    public static int[][] matrice;
     private static boolean[][] isSelected;
     int val = 0;
+    boolean clickCase = false;
 
     private Paint contour;
     private Paint bigContour;
@@ -26,10 +27,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Paint selectCaseContour;
     private Paint selectCaseBackground;
     private Paint selectBlockBackground;
-    Paint caseBlocked;
+    private Paint errorBackground;
+    private Paint caseBlocked;
 
     private int hauteur = 50, largeur = 50;
     private int cases;
+    private static int line = 0;
+    private static int column = 0;
 
     private boolean in = true;
     Thread mThread;
@@ -76,6 +80,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private void init() {
 
+        checker = new Checker();
 
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -85,7 +90,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         contour = new Paint();
         contour.setColor(Color.BLACK);
-        contour.setStrokeWidth(3);
+        contour.setStrokeWidth(2);
         bigContour = new Paint();
         bigContour.setColor(Color.BLACK);
         bigContour.setStrokeWidth(8);
@@ -94,23 +99,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         cell.setTextSize(70);
         text = new Paint();
         text.setColor(Color.BLACK);
-        text.setTextSize(100);
+        text.setTextSize(85);
         //text.setFakeBoldText(true);
+
+        // Gris
         caseBlocked = new Paint();
-        caseBlocked.setColor(Color.parseColor("#BDBDBD"));
+        caseBlocked.setColor(Color.parseColor("#CFCFCF"));
 
         selectCaseContour = new Paint();
         selectCaseContour.setColor(Color.BLACK);
         selectCaseContour.setStrokeWidth(12);
 
+        // Bleu
         selectCaseBackground = new Paint();
-        selectCaseBackground.setColor(Color.parseColor("#29B6F6"));
+        selectCaseBackground.setColor(Color.parseColor("#B3E5FC"));
         selectCaseBackground.setStyle(Paint.Style.FILL);
 
+        // Jaune
         selectBlockBackground = new Paint();
-        selectBlockBackground.setColor(Color.parseColor("#FFF59D"));
+        selectBlockBackground.setColor(Color.parseColor("#FFFF00"));
         selectBlockBackground.setStyle(Paint.Style.FILL);
-        selectBlockBackground.setAlpha(90);
+        selectBlockBackground.setAlpha(50);
+
+        // Rouge
+        errorBackground = new Paint();
+        errorBackground.setColor(Color.parseColor("#F44336"));
+        errorBackground.setStyle(Paint.Style.FILL);
 
 
 
@@ -139,7 +153,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
 
         paintCaseBlocked(canvas);
+
+
         paintCaseSelected(canvas);
+
+        paintLineError(canvas);
+        paintColumnError(canvas);
+
+        paintContourCaseSelected(canvas);
         paintNumber(canvas);
 
         paintGrid(canvas);
@@ -177,6 +198,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     }
 
 
+    private void paintContourCaseSelected(Canvas canvas) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+
+                if (isSelected[j][i] == false) continue;
+
+                canvas.drawLine(i * cases + cases - cases / 18, j * cases, i * cases + cases - cases / 18, j * cases + cases, selectCaseContour); // Right
+                canvas.drawLine(i * cases, j * cases + cases - cases / 18, i * cases + cases, j * cases + cases - cases / 18, selectCaseContour); // Bottom
+                canvas.drawLine(i * cases + cases / 16, j * cases, i * cases + cases / 16, j * cases + cases, selectCaseContour); // Left
+                canvas.drawLine(i * cases, j * cases + cases / 16, i * cases + cases, j * cases + cases / 16, selectCaseContour); // Top
+
+            }
+        }
+    }
+
     private void paintCaseSelected(Canvas canvas) {
 
 
@@ -185,8 +221,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             for (int j = 0; j < 9; j++) {
 
                 if (isSelected[j][i] == false) {
-                    if (matrice[j][i] == getValCaseSelected() && getValCaseSelected() != 0) {
-                        canvas.drawRect(i * cases, j * cases, i * cases + cases, j * cases + cases, selectCaseBackground);
+                    if (clickCase == true)
+                    {
+                        if (matrice[j][i] == getValCaseSelected() && getValCaseSelected() != 0)
+                            canvas.drawRect(i * cases, j * cases, i * cases + cases, j * cases + cases, selectCaseBackground);
+                    } else {
+                        if (matrice[j][i] == val && val != 0)
+                            canvas.drawRect(i * cases, j * cases, i * cases + cases, j * cases + cases, selectCaseBackground);
                     }
 
                 } else {
@@ -237,20 +278,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                     }
 
 
-                    if (matrice[j][i] == getValCaseSelected() && getValCaseSelected() != 0) {
+                    if (matrice[j][i] == getValCaseSelected() && getValCaseSelected() != 0 && clickCase == true) {
                         canvas.drawRect(i * cases, j * cases, i * cases + cases, j * cases + cases, selectCaseBackground);
 
                     }
 
-                    canvas.drawLine(i * cases + cases - cases / 16, j * cases, i * cases + cases - cases / 16, j * cases + cases, selectCaseContour); // Right
-                    canvas.drawLine(i * cases, j * cases + cases - cases / 16, i * cases + cases, j * cases + cases - cases / 16, selectCaseContour); // Bottom
-                    canvas.drawLine(i * cases + cases / 16, j * cases, i * cases + cases / 16, j * cases + cases, selectCaseContour); // Left
-                    canvas.drawLine(i * cases, j * cases + cases / 16, i * cases + cases, j * cases + cases / 16, selectCaseContour); // Top
 
-
-                }
                 }
             }
+        }
     }
 
     private void paintNumber(Canvas canvas) {
@@ -261,7 +297,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 if (matrice[j][i] == 0) continue;
                 String res = String.valueOf(matrice[j][i]);
 
-                canvas.drawText(res, i * cases + cases / 4, j * cases + cases * 4 / 5, text);
+                // canvas.drawText(res, i * cases + cases / 4, j * cases + cases * 4 / 5, text); text size = 100
+                canvas.drawText(res, i * cases + cases * 2 / 7, j * cases + cases * 3 / 4, text);
 
 
             }
@@ -282,6 +319,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
     }
 
+
+    private void paintLineError(Canvas canvas) {
+
+        if (checker.checkCaseWrittenLine() == false)
+        {
+            canvas.drawRect(0, getLine() * cases, getWidth(), getLine() * cases + cases, errorBackground);
+
+        }
+    }
+
+    private void paintColumnError(Canvas canvas) {
+
+        if (checker.checkCaseWrittenColumn() == false)
+        {
+            canvas.drawRect(getColumn() * cases, 0, getColumn() * cases + cases, getWidth(), errorBackground);
+        }
+    }
 
 
     @Override
@@ -331,16 +385,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 matrice[y][x] = val;
 
             getValCaseSelected();
+            clickCase = true;
         }
 
-        checkGrid();
-        Log.d("CheckGrid", Boolean.toString(checkLine()));
+        line = y;
+        column = x;
+
+        checker.checkCaseWrittenLine();
+        checker.checkCaseWrittenColumn();
+
+        checker.checkGrid();
+
         invalidate();
 
         return super.onTouchEvent(event);
     }
 
-    public int getValCaseSelected()
+    public static int getValCaseSelected()
     {
         int valeur = 0;
         for(int j=0;j<9;j++){
@@ -354,42 +415,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
 
-        Log.d("VALEUR", valeur + "");
+        //Log.d("VALEUR", valeur + "");
 
         return valeur;
     }
 
-    public boolean checkLine()
+    public static int getLine()
     {
-        return false;
+        return line;
     }
 
-    public boolean checkColumn()
+    public static int getColumn()
     {
-        return false;
+        return column;
     }
 
-    public boolean checkBlock()
-    {
-        return false;
-    }
-
-    public boolean checkGrid()
-    {
-        for(int i=0;i<9;i++){
-            for(int j=0;j<9;j++){
-
-                if (matrice[j][i] == 0)
-                {
-                    return false;
-                }
-
-            }
-        }
-
-
-        return true;
-    }
 
     @Override
     public void run() {

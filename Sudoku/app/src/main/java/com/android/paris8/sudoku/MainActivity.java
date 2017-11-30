@@ -55,47 +55,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn1:
                 mGameView.val = 1;
+                mGameView.clickCase = false;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
                 for (int i = 0; i < 10; i++)
                 {
                     btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
                 }
                 btn_checked[1].setBackgroundResource(R.drawable.btn_checked);
+                mGameView.invalidate();
 
                 break;
 
             case R.id.btn2:
                 mGameView.val = 2;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
                 for (int i = 0; i < 10; i++)
                 {
                     btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
                 }
                 btn_checked[2].setBackgroundResource(R.drawable.btn_checked);
+                mGameView.invalidate();
 
                 break;
 
             case R.id.btn3:
                 mGameView.val = 3;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
                 for (int i = 0; i < 10; i++)
                 {
                     btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
                 }
                 btn_checked[3].setBackgroundResource(R.drawable.btn_checked);
+                mGameView.invalidate();
 
                 break;
 
             case R.id.btn4:
                 mGameView.val = 4;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
                     btn_checked[i].setBackgroundResource(R.drawable.btn_unchecked);
                 }
                 btn_checked[4].setBackgroundResource(R.drawable.btn_checked);
+                mGameView.invalidate();
 
                 break;
 
             case R.id.btn5:
                 mGameView.val = 5;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -107,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn6:
                 mGameView.val = 6;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -118,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn7:
                 mGameView.val = 7;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -129,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn8:
                 mGameView.val = 8;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -140,6 +169,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn9:
                 mGameView.val = 9;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -151,6 +183,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_gomme:
                 mGameView.val = 0;
+                mGameView.clickCase = false;
+                if (mGameView.getValCaseSelected() == mGameView.val)
+                    mGameView.clickCase = true;
 
                 for (int i = 0; i < 10; i++)
                 {
