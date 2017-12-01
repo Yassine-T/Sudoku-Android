@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
@@ -77,8 +76,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
 
 
+    Paint backgroundVert;
 
     private void init() {
+
+        backgroundVert = new Paint();
+        backgroundVert.setColor(Color.GREEN);
+
 
         checker = new Checker();
 
@@ -131,10 +135,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         for(int i=0;i<9;i++){
 
             for(int j=0;j<9;j++){
-                matrice[j][i]=level[j][i];
+                matrice[i][j]=level[i][j];
 
             }
+
         }
+
 
         if ((mThread != null) && (!mThread.isAlive())) {
             mThread.start();
@@ -152,6 +158,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.drawRect(0, 0, getWidth(), getWidth(), background);
 
 
+
+
         paintCaseBlocked(canvas);
 
 
@@ -160,15 +168,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         paintLineError(canvas);
         paintColumnError(canvas);
 
+        if (checker.win() == true) {
+            canvas.drawRect(0, 0, getWidth(), getWidth(), backgroundVert);
+        }
+
         paintContourCaseSelected(canvas);
         paintNumber(canvas);
 
         paintGrid(canvas);
-
-
-
-
-        Log.d("Yassine", "onDraw");
 
     }
 
@@ -364,8 +371,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public boolean onTouchEvent(MotionEvent event) {
 
         Log.i("-> FCT <-", "onTouchEvent: " + event.getX());
-        //float x = event.getX();
-        //float y = event.getY();
         x = (int) event.getX() / cases;
         y = (int) event.getY() / cases;
         Log.d("CoordMatrice", "x = " + x + " y = " + y);
@@ -385,16 +390,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 matrice[y][x] = val;
 
             getValCaseSelected();
+            line = y;
+            column = x;
             clickCase = true;
         }
 
-        line = y;
-        column = x;
+
+        checker.checkLine();
 
         checker.checkCaseWrittenLine();
         checker.checkCaseWrittenColumn();
 
-        checker.checkGrid();
 
         invalidate();
 
@@ -415,7 +421,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
 
-        //Log.d("VALEUR", valeur + "");
 
         return valeur;
     }
