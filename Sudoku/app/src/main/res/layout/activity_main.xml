@@ -1,157 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:background="@drawable/splash_background"
+    tools:context="com.android.paris8.sudoku.MainActivity">
 
-    <com.android.paris8.sudoku.GameView
-        android:id="@+id/GameView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/splash_background"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btn_facile"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp">
-
-            <Button
-                android:id="@+id/btn1"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="1"/>
-
-            <Button
-                android:id="@+id/btn2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="2"/>
-
-            <Button
-                android:id="@+id/btn3"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="3"/>
-
-            <Button
-                android:id="@+id/btn4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="4"/>
-
-            <Button
-                android:id="@+id/btn5"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="5"/>
-
-            <Button
-                android:id="@+id/btn6"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="6"/>
-
-        </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:text="Facile"
+        android:layout_marginTop="150dp"/>
+    <Button
+        android:id="@+id/btn_moyen"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="20dp">
-
-            <Button
-                android:id="@+id/btn7"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="7"/>
-
-            <Button
-                android:id="@+id/btn8"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="8"/>
-
-            <Button
-                android:id="@+id/btn9"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="9"/>
-
-            <Button
-                android:id="@+id/btn_gomme"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="G" />
-
-            <Button
-                android:id="@+id/btn_stylo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="S"/>
-
-            <Button
-                android:id="@+id/btn_digit"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="D"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-</FrameLayout>
+        android:layout_gravity="center"
+        android:text="Moyen"
+        android:layout_marginTop="20dp"/>
+    <Button
+        android:id="@+id/btn_difficile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Difficile"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>

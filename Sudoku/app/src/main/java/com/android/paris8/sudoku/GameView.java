@@ -13,12 +13,16 @@ import android.view.SurfaceView;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
     Checker checker;
+    Level niveau;
+
+    static int typeLevel;
 
     public static int[][] matrice;
     private static boolean[][] isSelected;
     int val = 0;
     boolean clickCase = false;
 
+    Paint backgroundVert;
     private Paint contour;
     private Paint bigContour;
     private Paint text;
@@ -38,17 +42,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     Thread mThread;
     SurfaceHolder mSurfaceHolder;
 
-    final int[][] level= {
-            {0,3,7,0,6,1,2,9,0},
-            {9,2,5,4,3,0,0,6,1},
-            {0,0,0,0,0,0,7,5,0},
-            {0,5,0,0,4,6,9,0,0},
-            {3,0,9,0,0,0,6,0,2},
-            {0,0,4,2,9,0,0,7,0},
-            {0,9,2,0,0,0,0,0,0},
-            {5,1,0,0,7,9,4,2,6},
-            {0,6,8,3,2,0,5,1,0}
-    };
+    int[][] level;
+
 
     public GameView(Context context) {
 
@@ -76,7 +71,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
 
 
-    Paint backgroundVert;
+
 
     private void init() {
 
@@ -85,6 +80,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
 
         checker = new Checker();
+        niveau = new Level();
+
+
+        if (typeLevel == 1)
+            level = niveau.selectEasyLevel();
+        else if (typeLevel == 2)
+            level = niveau.selectMediumLevel();
+        else level = niveau.selecthardLevel();
 
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -167,10 +170,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
         paintLineError(canvas);
         paintColumnError(canvas);
+        paintBlockError(canvas);
 
-        if (checker.win() == true) {
+        if (checker.win() == true)
+        {
             canvas.drawRect(0, 0, getWidth(), getWidth(), backgroundVert);
         }
+
 
         paintContourCaseSelected(canvas);
         paintNumber(canvas);
@@ -243,46 +249,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                     canvas.drawRect(i * cases, 0, i * cases + cases, getWidth(), selectBlockBackground);
 
 
-                    // Ranger 1
-                    if (i < 3 && j < 3) {
-                        canvas.drawRect(0, 0, cases * 3, cases * 3, selectBlockBackground);
-                    }
+                    int l = getLine();
+                    int c = getColumn();
+                    if (l < 3) l = 0;
+                    else if (l < 6) l = 3;
+                    else  l = 6;
 
-                    if (i < 3 && (j >= 3 && j < 6)) {
-                        canvas.drawRect(0, 3 * cases, cases * 3, 3 * cases * 2, selectBlockBackground);
-                    }
+                    if (c < 3) c = 0;
+                    else if (c < 6) c = 3;
+                    else  c = 6;
 
-                    if (i < 3 && (j >= 6 && j < 9)) {
-                        canvas.drawRect(0, 6 * cases, cases * 3, 3 * cases * 3, selectBlockBackground);
-                    }
+                    canvas.drawRect(c * cases, l * cases, c * cases + cases * 3, l * cases + cases * 3, selectBlockBackground);
 
-                    // Ranger 2
-
-                    if ((i >= 3 && i < 6) && j < 3) {
-                        canvas.drawRect(3 * cases, 0, 3 * cases * 2, cases * 3, selectBlockBackground);
-                    }
-
-                    if ((i >= 3 && i < 6) && (j >= 3 && j < 6)) {
-                        canvas.drawRect(3 * cases, 3 * cases, 3 * cases * 2, 3 * cases * 2, selectBlockBackground);
-                    }
-
-                    if ((i >= 3 && i < 6) && (j >= 6 && j < 9)) {
-                        canvas.drawRect(3 * cases, 6 * cases, 3 * cases * 2, 3 * cases * 3, selectBlockBackground);
-                    }
-
-                    // Ranger 3
-
-                    if ((i >= 6 && i < 9) && j < 3) {
-                        canvas.drawRect(6 * cases, 0, 6 * cases * 2, cases * 3, selectBlockBackground);
-                    }
-
-                    if ((i >= 6 && i < 9) && (j >= 3 && j < 6)) {
-                        canvas.drawRect(6 * cases, 3 * cases, 6 * cases * 2, 3 * cases * 2, selectBlockBackground);
-                    }
-
-                    if ((i >= 6 && i < 9) && (j >= 6 && j < 9)) {
-                        canvas.drawRect(6 * cases, 6 * cases, 6 * cases * 2, 3 * cases * 3, selectBlockBackground);
-                    }
 
 
                     if (matrice[j][i] == getValCaseSelected() && getValCaseSelected() != 0 && clickCase == true) {
@@ -344,6 +322,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
     }
 
+    private void paintBlockError(Canvas canvas) {
+
+        if (checker.checkCaseWrittenBlock() == false)
+        {
+
+            int l = getLine();
+            int c = getColumn();
+            if (l < 3) l = 0;
+            else if (l < 6) l = 3;
+            else  l = 6;
+
+            if (c < 3) c = 0;
+            else if (c < 6) c = 3;
+            else  c = 6;
+
+            canvas.drawRect(c * cases, l * cases, c * cases + cases * 3, l * cases + cases * 3, errorBackground);
+
+        }
+    }
+
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -395,11 +393,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             clickCase = true;
         }
 
-
-        checker.checkLine();
-
-        checker.checkCaseWrittenLine();
-        checker.checkCaseWrittenColumn();
 
 
         invalidate();
