@@ -1,6 +1,9 @@
 package com.android.paris8.sudoku;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,17 +12,25 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     Checker checker;
     Level niveau;
+
+
 
     static int typeLevel;
 
     public static int[][] matrice;
     private static boolean[][] isSelected;
-    int val = 0;
+    int val;
     boolean clickCase = false;
 
     Paint backgroundVert;
@@ -35,28 +46,49 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private int hauteur = 50, largeur = 50;
     private int cases;
-    private static int line = 0;
-    private static int column = 0;
+    private static int line;
+    private static int column;
 
-    private boolean in = true;
     Thread mThread;
+    Thread t;
     SurfaceHolder mSurfaceHolder;
 
     int[][] level;
+
+    int count;
+    boolean bDialog;
+    TextView tv_level;
+    private String score;
+    int bestScoreEasy;
+    String keyBestScoreEasyMinutes = "KEYBESTSCOREEASYMINUTES";
+    String keyBestScoreEasySecondes = "KEYBESTSCOREEASYSECONDES";
+    String strBestScoreEasy;
+    String KeyBestScoreEasy = "KEYBESTSCOREEASY";
+    int bestScoreMedium;
+    String keyBestScoreMediumMinutes = "KEYBESTSCOREMEDIUMMINUTES";
+    String keyBestScoreMediumSecondes = "KEYBESTSCOREMEDIUMSECONDES";
+    String strBestScoreMedium;
+    String KeyBestScoreMedium = "KEYBESTSCOREMEDIUM";
+    int bestScoreHard;
+    String keyBestScoreHardMinutes = "KEYBESTSCOREHARDMINUTES";
+    String keyBestScoreHardSecondes = "KEYBESTSCOREHARDSECONDES";
+    String strBestScoreHard;
+    String KeyBestScoreHard = "KEYBESTSCOREHARD";
+
+    SharedPreferences sharedPref;
+
 
 
     public GameView(Context context) {
 
         super(context);
         init();
-        mThread = new Thread(this);
         setFocusable(true);
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        mThread = new Thread(this);
         setFocusable(true);
 
     }
@@ -64,7 +96,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
-        mThread = new Thread(this);
         setFocusable(true);
     }
 
@@ -75,6 +106,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private void init() {
 
+        sharedPref = ((Game)getContext()).getPreferences(Context.MODE_PRIVATE);
+
         backgroundVert = new Paint();
         backgroundVert.setColor(Color.GREEN);
 
@@ -82,6 +115,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         checker = new Checker();
         niveau = new Level();
 
+        line = 0;
+        column = 0;
+        val = 0;
+        count = 0;
+        bDialog = false;
 
         if (typeLevel == 1)
             level = niveau.selectEasyLevel();
@@ -145,12 +183,57 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         }
 
 
-        if ((mThread != null) && (!mThread.isAlive())) {
+        /*if ((mThread != null) && (!mThread.isAlive())) {
             mThread.start();
             Log.e("-FCT-", "cv_thread.start()");
-        }
+        }*/
+
+        //mChronometer = (Chronometer) ((Game)getContext()).findViewById(R.id.chronometer);
+        //((Game)getContext()).mChronometer.start();
+
+
+        /*t = new Thread(){
+
+            @Override
+            public void run() {
+                while (checker.win() == false)
+                {
+                    try {
+                        Thread.sleep(1000);
+
+                        ((Game)getContext()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                count++;
+
+                                //((Game)getContext()).tv_timer.setText(String.valueOf(count));
+                                score = ((Game)getContext()).tv_timer.getText().toString();
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        t.start();*/
+
+
+
 
     }
+
+    /*public void updateTimerText(final String mTime)
+    {
+
+        ((Game)getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((Game)getContext()).tv_timer.setText(mTime);
+            }
+        });
+    }*/
 
 
     @Override
@@ -175,8 +258,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         if (checker.win() == true)
         {
             canvas.drawRect(0, 0, getWidth(), getWidth(), backgroundVert);
+            if (bDialog == false) {
+                dialogScore(getContext());
+                bDialog = true;
+            }
         }
-
 
         paintContourCaseSelected(canvas);
         paintNumber(canvas);
@@ -282,7 +368,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 if (matrice[j][i] == 0) continue;
                 String res = String.valueOf(matrice[j][i]);
 
-                // canvas.drawText(res, i * cases + cases / 4, j * cases + cases * 4 / 5, text); text size = 100
                 canvas.drawText(res, i * cases + cases * 2 / 7, j * cases + cases * 3 / 4, text);
 
 
@@ -395,6 +480,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
 
 
+
         invalidate();
 
         return super.onTouchEvent(event);
@@ -429,29 +515,213 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     }
 
 
-    @Override
-    public void run() {
 
-        Canvas c = null;
-        while (in) {
-            try {
-                mThread.sleep(40);
-                try {
-                    c = mSurfaceHolder.lockCanvas(null);
-                    //if (c!=null)
-                    //nDraw(c);
-                } finally {
-                    if (c != null) {
-                        mSurfaceHolder.unlockCanvasAndPost(c);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("-> RUN <-", "PB DANS RUN");
-            }
+    public void dialogScore(Context context)
+    {
+
+
+
+        int secondes = ((Game)getContext()).chrono.getSecondes();
+        int minutes = ((Game)getContext()).chrono.getMinutes();
+        score = minutes + " : " + secondes;
+        if (minutes < 10 && secondes < 10)
+        {
+            score = "0" + minutes + " : 0" + secondes;
         }
-    }
+        if (minutes < 10 )
+        {
+            score = "0" + minutes + " : " + secondes;
+        }
 
+        if (secondes < 10 )
+        {
+            score = minutes + " : 0" + secondes;
+        }
+
+
+
+
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog_score);
+        dialog.setTitle("Partie Terminée");
+        TextView tv_score = (TextView) dialog.findViewById(R.id.tv_score);
+        tv_score.setText("Score :    " + score);
+
+        tv_level = (TextView) dialog.findViewById(R.id.tv_level);
+        TextView tv_best_score = (TextView) dialog.findViewById(R.id.tv_best_score);
+
+
+        Button btn_main = (Button) dialog.findViewById(R.id.btn_main);
+
+
+
+        if (typeLevel == 1)
+        {
+            tv_level.setText("Niveau Facile");
+
+            strBestScoreEasy = sharedPref.getString(KeyBestScoreEasy, "00 : 00");
+            int bestScoreSecondes = sharedPref.getInt(keyBestScoreEasySecondes, 0);
+            int bestScoreMinutes = sharedPref.getInt(keyBestScoreEasyMinutes, 0);
+
+
+
+            if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
+            {
+
+                bestScoreSecondes = secondes;
+                bestScoreMinutes = minutes;
+
+                strBestScoreEasy = score;
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyBestScoreEasy, strBestScoreEasy);
+                editor.commit();
+                editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
+                editor.commit();
+                editor.putInt(keyBestScoreEasyMinutes, bestScoreMinutes);
+                editor.commit();
+            }
+
+
+            if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
+
+                bestScoreSecondes = secondes;
+                bestScoreMinutes = minutes;
+                if (bestScoreMinutes < 10 )
+                {
+                    score = "0" + minutes + " : " + secondes;
+                }
+                strBestScoreEasy = score;
+                tv_score.setText("Nouveau Record : " + strBestScoreEasy);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyBestScoreEasy, strBestScoreEasy);
+                editor.commit();
+
+                editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
+                editor.commit();
+                editor.putInt(keyBestScoreEasyMinutes, bestScoreMinutes);
+                editor.commit();
+            }
+
+
+            strBestScoreEasy = sharedPref.getString(KeyBestScoreEasy, "00 : 00");
+            tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreEasy, "00 : 00"));
+
+        }
+
+
+        if (typeLevel == 2)
+        {
+            tv_level.setText("Niveau Moyen");
+
+            strBestScoreMedium = sharedPref.getString(KeyBestScoreMedium, "00 : 00");
+            int bestScoreSecondes = sharedPref.getInt(keyBestScoreMediumSecondes, 0);
+            int bestScoreMinutes = sharedPref.getInt(keyBestScoreMediumMinutes, 0);
+
+
+
+            if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
+            {
+
+                bestScoreSecondes = secondes;
+                bestScoreMinutes = minutes;
+                strBestScoreMedium = score;
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyBestScoreMedium, strBestScoreMedium);
+                editor.commit();
+                editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
+                editor.commit();
+                editor.putInt(keyBestScoreMediumMinutes, bestScoreMinutes);
+                editor.commit();
+
+            }
+
+
+            if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
+                bestScoreSecondes = secondes;
+                bestScoreMinutes = minutes;
+                strBestScoreMedium = score;
+                tv_score.setText("Nouveau Record :   " + strBestScoreMedium);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyBestScoreMedium, strBestScoreMedium);
+                editor.commit();
+
+                editor.putInt(keyBestScoreMediumSecondes, bestScoreSecondes);
+                editor.commit();
+                editor.putInt(keyBestScoreMediumMinutes, bestScoreMinutes);
+                editor.commit();
+
+            }
+
+
+            strBestScoreMedium = sharedPref.getString(KeyBestScoreMedium, "00 : 00");
+            tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreMedium, "00 : 00"));
+
+        }
+
+
+        if (typeLevel == 3)
+        {
+            tv_level.setText("Niveau Difficile");
+
+            strBestScoreHard = sharedPref.getString(KeyBestScoreHard, "00 : 00");
+            int bestScoreSecondes = sharedPref.getInt(keyBestScoreHardSecondes, 0);
+            int bestScoreMinutes = sharedPref.getInt(keyBestScoreHardMinutes, 0);
+
+
+
+            if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
+            {
+
+                bestScoreSecondes = secondes;
+                bestScoreMinutes = minutes;
+                strBestScoreHard= score;
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyBestScoreHard, strBestScoreHard);
+                editor.commit();
+                editor.putInt(keyBestScoreHardSecondes, bestScoreSecondes);
+                editor.commit();
+                editor.putInt(keyBestScoreHardMinutes, bestScoreMinutes);
+                editor.commit();
+
+            }
+
+
+            if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
+                bestScoreSecondes = secondes;
+                bestScoreMinutes = minutes;
+                strBestScoreHard= score;
+                tv_score.setText("Nouveau Record :   " + strBestScoreHard);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(KeyBestScoreHard, strBestScoreHard);
+                editor.commit();
+
+                editor.putInt(keyBestScoreHardMinutes, bestScoreSecondes);
+                editor.commit();
+                editor.putInt(keyBestScoreHardMinutes, bestScoreMinutes);
+                editor.commit();
+
+            }
+
+
+            strBestScoreMedium = sharedPref.getString(KeyBestScoreHard, "00 : 00");
+            tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreHard, "00 : 00"));
+
+        }
+
+
+        btn_main.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), MainActivity.class);
+                getContext().startActivity(i);
+            }
+        });
+        dialog.show();
+
+        Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+    }
 }
 
 

@@ -122,7 +122,7 @@ public class Level {
     public int[][] selectEasyLevel()
     {
         int nbreAleatoire = 0;
-        nbreAleatoire = (int) (1 + (Math.random() * (3 - 1)));
+        nbreAleatoire = (int) (1 + (Math.random() * (4 - 1)));
 
 
         switch (nbreAleatoire) {
@@ -139,6 +139,10 @@ public class Level {
                 level = easy3;
                 break;
 
+            case 4:
+                level = easy3;
+                break;
+
         }
 
         return level;
@@ -147,7 +151,7 @@ public class Level {
     public int[][] selectMediumLevel()
     {
         int nbreAleatoire = 0;
-        nbreAleatoire = (int) (1 + (Math.random() * (3 - 1)));
+        nbreAleatoire = (int) (1 + (Math.random() * (4 - 1)));
 
         switch (nbreAleatoire) {
 
@@ -163,6 +167,10 @@ public class Level {
                 level = medium3;
                 break;
 
+            case 4:
+                level = medium3;
+                break;
+
         }
 
         return level;
@@ -171,7 +179,7 @@ public class Level {
     public int[][] selecthardLevel()
     {
         int nbreAleatoire = 0;
-        nbreAleatoire = (int) (1 + (Math.random() * (3 - 1)));
+        nbreAleatoire = (int) (1 + (Math.random() * (4 - 1)));
 
         switch (nbreAleatoire) {
 
@@ -184,6 +192,10 @@ public class Level {
                 break;
 
             case 3:
+                level = hard3;
+                break;
+
+            case 4:
                 level = hard3;
                 break;
 

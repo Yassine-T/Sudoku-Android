@@ -1,35 +1,67 @@
 package com.android.paris8.sudoku;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
+
 
 public class Game extends AppCompatActivity implements View.OnClickListener {
 
     private GameView mGameView;
+    private Checker checker;
+
 
     Button btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9;
     Button btn_gomme;
     Button btn_checked[];
 
-    static int lvl;
 
+    TextView tv_timer;
 
+    int minutes = 0;
+    int secondes = 0;
+
+    Chrono chrono;
+    Thread mThreadChrono;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        btn_checked = new Button[10];
-
         mGameView = (GameView) findViewById(R.id.GameView);
         mGameView.setVisibility(View.VISIBLE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+        chrono = new Chrono(this);
+        mThreadChrono = new Thread(chrono);
+        mThreadChrono.start();
+        chrono.start();
+
+        tv_timer = (TextView) findViewById(R.id.tv_timer);
+
+        btn_checked = new Button[10];
+
+
+        checker = new Checker();
+
 
         btn1 = (Button) findViewById(R.id.btn1);            btn1.setOnClickListener(this);
         btn2 = (Button) findViewById(R.id.btn2);            btn2.setOnClickListener(this);
@@ -53,7 +85,22 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         btn_checked[8] = btn8;
         btn_checked[9] = btn9;
 
+
+
     }
+
+    public void updateTimerText(final String time)
+    {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tv_timer.setText(time);
+                //Log.d("chrono", "minutes : " + chrono.getMinutes() + " secondes: " + chrono.getSecondes());
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -203,8 +250,11 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+
+
     @Override
     public void onBackPressed() {
+        if (checker.win() == true) finish();
         new AlertDialog.Builder(Game.this)
                 .setIcon(R.drawable.ic_warning)
                 .setTitle("Quitter la partie")
@@ -224,5 +274,36 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
                     }
                 }).show();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        minutes = chrono.getMinutes();
+        secondes = chrono.getSecondes();
+
+        Log.d("pause", "onPause: " + minutes + " --------- " + secondes);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+
 }
+
 

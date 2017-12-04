@@ -8,13 +8,23 @@
     android:background="@drawable/splash_background"
     tools:context="com.android.paris8.sudoku.MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:textSize="90dp"
+        android:textStyle="bold|italic"
+        android:textColor="#212121"
+        android:text="Sudoku"/>
+
     <Button
         android:id="@+id/btn_facile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Facile"
-        android:layout_marginTop="150dp"/>
+        android:layout_marginTop="60dp"/>
     <Button
         android:id="@+id/btn_moyen"
         android:layout_width="wrap_content"
@@ -28,5 +38,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Difficile"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btn_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Scores"
         android:layout_marginTop="20dp"/>
 </LinearLayout>

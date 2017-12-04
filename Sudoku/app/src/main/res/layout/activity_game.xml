@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tv_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:layout_marginLeft="20dp"
+            android:text=""/>
+
+    </android.support.v7.widget.Toolbar>
 
     <com.android.paris8.sudoku.GameView
         android:id="@+id/GameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
         android:background="@drawable/splash_background"/>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +51,7 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="1"/>
 
             <Button
@@ -41,6 +62,7 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="2"/>
 
             <Button
@@ -51,6 +73,7 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="3"/>
 
             <Button
@@ -61,6 +84,7 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="4"/>
 
             <Button
@@ -71,17 +95,10 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="5"/>
 
-            <Button
-                android:id="@+id/btn6"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="6"/>
+
 
         </LinearLayout>
 
@@ -93,12 +110,24 @@
             android:layout_marginBottom="20dp">
 
             <Button
-                android:id="@+id/btn7"
+                android:id="@+id/btn6"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
+                android:text="6"/>
+
+            <Button
+                android:id="@+id/btn7"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_unchecked"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="#000"
                 android:text="7"/>
 
             <Button
@@ -109,6 +138,7 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="8"/>
 
             <Button
@@ -119,6 +149,7 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
+                android:textColor="#000"
                 android:text="9"/>
 
             <Button
@@ -129,27 +160,8 @@
                 android:background="@drawable/btn_unchecked"
                 android:textSize="30dp"
                 android:textStyle="bold"
-                android:text="G" />
+                android:textColor="#000"/>
 
-            <Button
-                android:id="@+id/btn_stylo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="S"/>
-
-            <Button
-                android:id="@+id/btn_digit"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/btn_unchecked"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:text="D"/>
         </LinearLayout>
 
     </LinearLayout>
