@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.TextView;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
@@ -49,8 +48,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private static int line;
     private static int column;
 
-    Thread mThread;
-    Thread t;
     SurfaceHolder mSurfaceHolder;
 
     int[][] level;
@@ -59,21 +56,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     boolean bDialog;
     TextView tv_level;
     private String score;
-    int bestScoreEasy;
+
+    boolean isDialog = false;
+
     String keyBestScoreEasyMinutes = "KEYBESTSCOREEASYMINUTES";
     String keyBestScoreEasySecondes = "KEYBESTSCOREEASYSECONDES";
     String strBestScoreEasy;
     String KeyBestScoreEasy = "KEYBESTSCOREEASY";
-    int bestScoreMedium;
+
     String keyBestScoreMediumMinutes = "KEYBESTSCOREMEDIUMMINUTES";
     String keyBestScoreMediumSecondes = "KEYBESTSCOREMEDIUMSECONDES";
     String strBestScoreMedium;
     String KeyBestScoreMedium = "KEYBESTSCOREMEDIUM";
-    int bestScoreHard;
+
     String keyBestScoreHardMinutes = "KEYBESTSCOREHARDMINUTES";
     String keyBestScoreHardSecondes = "KEYBESTSCOREHARDSECONDES";
     String strBestScoreHard;
     String KeyBestScoreHard = "KEYBESTSCOREHARD";
+
+    public static final String PREF_FILE_NAME = "PrefFile";
 
     SharedPreferences sharedPref;
 
@@ -106,7 +107,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     private void init() {
 
-        sharedPref = ((Game)getContext()).getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getContext().getSharedPreferences(PREF_FILE_NAME,Context.MODE_PRIVATE);
 
         backgroundVert = new Paint();
         backgroundVert.setColor(Color.GREEN);
@@ -714,12 +715,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), MainActivity.class);
                 getContext().startActivity(i);
+                ((Game) getContext()).finish();
             }
         });
+
+
+        isDialog = true;
+
         dialog.show();
 
         Window window = dialog.getWindow();
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
 
     }
 }

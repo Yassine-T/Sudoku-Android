@@ -1,6 +1,7 @@
 package com.android.paris8.sudoku;
 
 import android.content.Context;
+import android.provider.Settings;
 import android.util.Log;
 
 public class Chrono extends Checker implements Runnable{
@@ -13,6 +14,8 @@ public class Chrono extends Checker implements Runnable{
     private boolean mIsRunning;
     private int seconds;
     private int minutes;
+    private long mLastPause;
+    boolean pause = false;
 
 
     public Chrono(Context mContext) {
@@ -57,33 +60,35 @@ public class Chrono extends Checker implements Runnable{
         return minutes;
     }
 
-    public long getStartTime() {
-        return mStartTime;
-    }
-
     @Override
     public void run() {
-
+        long since = 0;
         while (mIsRunning)
         {
-            long since = System.currentTimeMillis() - mStartTime;
 
-            //int millis = (int) since / 1000;
-            seconds = (int) ((since / 1000) % 60);
-            minutes = (int) ((since / MILLIS_TO_MINUTES) % 60);
-            //int hours = (int) ((since / MILLIS_TO_HOURS) % 24);
-
-            ((Game)mContext).updateTimerText(String.format("%02d:%02d", minutes, seconds));
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if (win() == true)
+            if (pause == true)
             {
-                mIsRunning = false;
+                mStartTime = System.currentTimeMillis() - since;
+            } else {
+                since = System.currentTimeMillis() - mStartTime;
+
+                //int millis = (int) since / 1000;
+                seconds = (int) ((since / 1000) % 60);
+                minutes = (int) ((since / MILLIS_TO_MINUTES) % 60);
+                //int hours = (int) ((since / MILLIS_TO_HOURS) % 24);
+
+                ((Game) mContext).updateTimerText(String.format("%02d:%02d", minutes, seconds));
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (win() == true) {
+                    mIsRunning = false;
+                }
+
             }
         }
     }

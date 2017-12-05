@@ -9,7 +9,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     public final static String KEYTYPELEVEL = "com.android.paris8.sudoku.KEYTYPELEVEL";
-    Button btn_facile, btn_moyen, btn_difficile;
+    Button btn_facile, btn_moyen, btn_difficile, btn_score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         btn_facile = (Button) findViewById(R.id.btn_facile);
         btn_moyen = (Button) findViewById(R.id.btn_moyen);
         btn_difficile = (Button) findViewById(R.id.btn_difficile);
+        btn_score = (Button) findViewById(R.id.btn_score);
 
         btn_facile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, Game.class);
                 startActivity(i);
 
+            }
+        });
+
+        btn_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(MainActivity.this, ScoreActivity.class);
+                startActivity(i);
             }
         });
 

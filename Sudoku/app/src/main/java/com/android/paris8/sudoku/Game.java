@@ -9,12 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.TextView;
 
 
@@ -254,7 +250,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onBackPressed() {
-        if (checker.win() == true) finish();
+        if (mGameView.isDialog == true) Game.this.finish();
         new AlertDialog.Builder(Game.this)
                 .setIcon(R.drawable.ic_warning)
                 .setTitle("Quitter la partie")
@@ -279,6 +275,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
 
+        chrono.pause = false;
 
     }
 
@@ -286,10 +283,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
 
-        minutes = chrono.getMinutes();
-        secondes = chrono.getSecondes();
-
-        Log.d("pause", "onPause: " + minutes + " --------- " + secondes);
+        chrono.pause = true;
     }
 
     @Override
