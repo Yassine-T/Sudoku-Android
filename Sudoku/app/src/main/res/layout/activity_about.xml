@@ -4,15 +4,99 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/splash_background"
     tools:context="com.android.paris8.sudoku.About">
 
     <TextView
-        android:id="@+id/tv_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
         android:textColor="#000"
-        android:text="Yassine"/>
+        android:textStyle="bold"
+        android:textSize="40dp"
+        android:text="Universtié Paris 8"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="20dp"
+        android:background="#FFF" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="Cours : "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="#000"
+            android:textSize="20dp"
+            android:text="Conception sur OS nomades"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:text="Projet : "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000"
+            android:textSize="20dp"
+            android:text="Jeu du Sudoku"/>
+
+</LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="Master 1 Informatique"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="TABET Yassine"/>
 
 </LinearLayout>

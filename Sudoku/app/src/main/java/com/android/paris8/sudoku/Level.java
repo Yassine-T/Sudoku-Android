@@ -1,6 +1,5 @@
 package com.android.paris8.sudoku;
 
-import android.util.Log;
 
 public class Level {
 

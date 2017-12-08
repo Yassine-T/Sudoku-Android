@@ -5,7 +5,7 @@
         <item
             android:id="@+id/regle_du_jeu"
             android:icon="@drawable/abc_btn_check_to_on_mtrl_015"
-            android:title="Règle du jeu" />
+            android:title="Règle du Jeu" />
 
 
 
@@ -26,6 +26,6 @@
 
     <item
         android:id="@+id/about"
-        android:title="À propos" />
+        android:title="À Propos" />
 
 </menu>

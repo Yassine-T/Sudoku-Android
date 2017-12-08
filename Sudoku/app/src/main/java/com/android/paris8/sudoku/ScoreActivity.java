@@ -1,6 +1,7 @@
 package com.android.paris8.sudoku;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,9 +13,9 @@ public class ScoreActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
 
-    String KeyBestScoreEasy = "KEYBESTSCOREEASY";
-    String KeyBestScoreMedium = "KEYBESTSCOREMEDIUM";
-    String KeyBestScoreHard = "KEYBESTSCOREHARD";
+    String KeyBestScoreEasy = "com.android.paris8.sudoku.KEYBESTSCOREEASY";
+    String KeyBestScoreMedium = "com.android.paris8.sudoku.KEYBESTSCOREMEDIUM";
+    String KeyBestScoreHard = "com.android.paris8.sudoku.KEYBESTSCOREHARD";
 
     private String bestScoreEasy;
     private String bestScoreMedium;
@@ -44,5 +45,12 @@ public class ScoreActivity extends AppCompatActivity {
         tv_score_easy.setText(bestScoreEasy);
         tv_score_medium.setText(bestScoreMedium);
         tv_score_hard.setText(bestScoreHard);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ScoreActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }

@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public final static String KEYTYPELEVEL = "com.android.paris8.sudoku.KEYTYPELEVEL";
-    public final static String KEYSOUND = "com.android.paris8.sudoku.KEYSOUND";
-    public final static String keyBtnSound = "com.android.paris8.sudoku.KEYBTNSOUND";
+    String KEYSOUND = "com.android.paris8.sudoku.KEYSOUND";
+    String keyBtnSound = "com.android.paris8.sudoku.KEYBTNSOUND";
 
     SharedPreferences sharedPref;
 

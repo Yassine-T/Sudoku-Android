@@ -23,6 +23,8 @@ import android.widget.Toast;
 public class Game extends AppCompatActivity implements View.OnClickListener {
 
     private SharedPreferences sharedPref;
+    public final static String KEYSOUND = "com.android.paris8.sudoku.KEYSOUND";
+    public final static String keyBtnSound = "com.android.paris8.sudoku.KEYBTNSOUND";
     MediaPlayer buttonSound;
     boolean stateSound = true;
     private MenuItem sound;
@@ -67,8 +69,10 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         mThreadChrono.start();
         chrono.start();
 
-        sharedPref = getSharedPreferences(MainActivity.KEYSOUND, Context.MODE_PRIVATE);
-        stateSound = sharedPref.getBoolean(MainActivity.keyBtnSound, true);
+        sharedPref = getSharedPreferences(KEYSOUND, Context.MODE_PRIVATE);
+        stateSound = sharedPref.getBoolean(keyBtnSound, true);
+
+        Log.d("sound", "onCreate: " + stateSound);
 
         buttonSound = MediaPlayer.create(this, R.raw.sound_btn);
 
@@ -355,11 +359,9 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
                         if (stateSound) buttonSound.start();
 
 
-                        saveGame.setStateGameSaved(true);
-                        saveGame.setSaveLevelName(tv_niveau.getText().toString());
+                        saveG(Game.this);
                         mThreadChrono.interrupt();
                         chrono.stop();
-                        saveGame.setClickBtnSave(true);
                         Toast.makeText(Game.this, "La partie à été sauvegardé", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(Game.this, MainActivity.class);
                         startActivity(i);
@@ -376,7 +378,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
                     }
                 }).show();
 
-        saveGame.saveMatrice(this, GameView.matrice);
+
     }
 
     @Override
@@ -392,11 +394,14 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         super.onPause();
 
         chrono.pause = true;
+
+        saveG(Game.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        saveG(Game.this);
     }
 
     @Override
@@ -411,6 +416,9 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_game, menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        sound = menu.findItem(R.id.enable_sound);
+        no_sound = menu.findItem(R.id.disable_sound);
 
         if (stateSound)
         {
@@ -443,11 +451,11 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
                                 if (stateSound) buttonSound.start();
 
 
-                                saveGame.setStateGameSaved(true);
-                                saveGame.setSaveLevelName(tv_niveau.getText().toString());
+                                saveG(Game.this);
+
                                 mThreadChrono.interrupt();
                                 chrono.stop();
-                                saveGame.setClickBtnSave(true);
+
                                 Toast.makeText(Game.this, "La partie à été sauvegardé", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(Game.this, MainActivity.class);
                                 startActivity(i);
@@ -471,10 +479,8 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
 
 
                 Toast.makeText(this, "La partie à été sauvegardé", Toast.LENGTH_SHORT).show();
-                saveGame.setStateGameSaved(true);
-                saveGame.saveMatrice(this, GameView.matrice);
-                saveGame.setSaveLevelName(tv_niveau.getText().toString());
-                saveGame.setClickBtnSave(true);
+
+                saveG(Game.this);
 
 
                 break;
@@ -486,7 +492,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
 
                 stateSound = true;
                 SharedPreferences.Editor edit = sharedPref.edit();
-                edit.putBoolean(MainActivity.keyBtnSound, stateSound);
+                edit.putBoolean(keyBtnSound, stateSound);
                 edit.commit();
 
                 break;
@@ -498,7 +504,7 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
 
                 stateSound = false;
                 SharedPreferences.Editor e = sharedPref.edit();
-                e.putBoolean(MainActivity.keyBtnSound, stateSound);
+                e.putBoolean(keyBtnSound, stateSound);
                 e.commit();
                 break;
 
@@ -507,6 +513,13 @@ public class Game extends AppCompatActivity implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+    public void saveG(Context context)
+    {
+        saveGame.setStateGameSaved(true);
+        saveGame.saveMatrice(context, GameView.matrice);
+        saveGame.setSaveLevelName(tv_niveau.getText().toString());
+        saveGame.setClickBtnSave(true);
+    }
 }
 
 

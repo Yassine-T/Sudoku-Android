@@ -37,7 +37,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private Paint contour;
     private Paint bigContour;
     private Paint text;
-    private Paint cell;
     private Paint selectCaseContour;
     private Paint selectCaseBackground;
     private Paint selectBlockBackground;
@@ -148,9 +147,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         bigContour = new Paint();
         bigContour.setColor(Color.BLACK);
         bigContour.setStrokeWidth(8);
-        cell = new Paint();
-        cell.setColor(Color.GRAY);
-        cell.setTextSize(70);
         text = new Paint();
         text.setColor(Color.BLACK);
         text.setTextSize(85);
@@ -390,8 +386,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i("-> FCT <-", "surfaceCreated");
-        //mThread.keepDrawing = true;
-        //mThread.start();
     }
 
     @Override
@@ -477,8 +471,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     public void dialogScore(Context context)
     {
 
-
-
+        
         secondes = ((Game)getContext()).chrono.getSecondes();
         minutes = ((Game)getContext()).chrono.getMinutes();
         score = minutes + " : " + secondes;

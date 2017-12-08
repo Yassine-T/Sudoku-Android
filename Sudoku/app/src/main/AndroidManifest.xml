@@ -30,9 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScoreActivity" />
-        <activity android:name=".About" />
-        <activity android:name=".Rules"></activity>
+        <activity android:name=".ScoreActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".About"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Rules"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
