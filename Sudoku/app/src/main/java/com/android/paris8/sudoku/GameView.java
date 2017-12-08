@@ -22,6 +22,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     Checker checker;
     Level niveau;
+    SaveGame saveGame;
 
 
 
@@ -59,25 +60,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     boolean isDialog = false;
 
-    String keyBestScoreEasyMinutes = "KEYBESTSCOREEASYMINUTES";
-    String keyBestScoreEasySecondes = "KEYBESTSCOREEASYSECONDES";
+    String keyBestScoreEasyMinutes = "com.android.paris8.sudoku.KEYBESTSCOREEASYMINUTES";
+    String keyBestScoreEasySecondes = "com.android.paris8.sudoku.KEYBESTSCOREEASYSECONDES";
     String strBestScoreEasy;
-    String KeyBestScoreEasy = "KEYBESTSCOREEASY";
+    String KeyBestScoreEasy = "com.android.paris8.sudoku.KEYBESTSCOREEASY";
 
-    String keyBestScoreMediumMinutes = "KEYBESTSCOREMEDIUMMINUTES";
-    String keyBestScoreMediumSecondes = "KEYBESTSCOREMEDIUMSECONDES";
+    String keyBestScoreMediumMinutes = "com.android.paris8.sudoku.KEYBESTSCOREMEDIUMMINUTES";
+    String keyBestScoreMediumSecondes = "com.android.paris8.sudoku.KEYBESTSCOREMEDIUMSECONDES";
     String strBestScoreMedium;
-    String KeyBestScoreMedium = "KEYBESTSCOREMEDIUM";
+    String KeyBestScoreMedium = "com.android.paris8.sudoku.KEYBESTSCOREMEDIUM";
 
-    String keyBestScoreHardMinutes = "KEYBESTSCOREHARDMINUTES";
-    String keyBestScoreHardSecondes = "KEYBESTSCOREHARDSECONDES";
+    String keyBestScoreHardMinutes = "com.android.paris8.sudoku.KEYBESTSCOREHARDMINUTES";
+    String keyBestScoreHardSecondes = "com.android.paris8.sudoku.KEYBESTSCOREHARDSECONDES";
     String strBestScoreHard;
-    String KeyBestScoreHard = "KEYBESTSCOREHARD";
+    String KeyBestScoreHard = "com.android.paris8.sudoku.KEYBESTSCOREHARD";
 
     public static final String PREF_FILE_NAME = "PrefFile";
 
     SharedPreferences sharedPref;
 
+    int secondes;
+    int minutes;
+
+    TextView tv_best_score;
+    TextView tv_score;
 
 
     public GameView(Context context) {
@@ -115,6 +121,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         checker = new Checker();
         niveau = new Level();
+        saveGame = new SaveGame(getContext());
 
         line = 0;
         column = 0;
@@ -122,7 +129,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         count = 0;
         bDialog = false;
 
-        if (typeLevel == 1)
+        if (typeLevel == 0) level = saveGame.getMatrice();
+        else if (typeLevel == 1)
             level = niveau.selectEasyLevel();
         else if (typeLevel == 2)
             level = niveau.selectMediumLevel();
@@ -183,58 +191,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         }
 
-
-        /*if ((mThread != null) && (!mThread.isAlive())) {
-            mThread.start();
-            Log.e("-FCT-", "cv_thread.start()");
-        }*/
-
-        //mChronometer = (Chronometer) ((Game)getContext()).findViewById(R.id.chronometer);
-        //((Game)getContext()).mChronometer.start();
-
-
-        /*t = new Thread(){
-
-            @Override
-            public void run() {
-                while (checker.win() == false)
-                {
-                    try {
-                        Thread.sleep(1000);
-
-                        ((Game)getContext()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                count++;
-
-                                //((Game)getContext()).tv_timer.setText(String.valueOf(count));
-                                score = ((Game)getContext()).tv_timer.getText().toString();
-                            }
-                        });
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        t.start();*/
-
-
-
-
     }
-
-    /*public void updateTimerText(final String mTime)
-    {
-
-        ((Game)getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ((Game)getContext()).tv_timer.setText(mTime);
-            }
-        });
-    }*/
 
 
     @Override
@@ -259,6 +216,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         if (checker.win() == true)
         {
             canvas.drawRect(0, 0, getWidth(), getWidth(), backgroundVert);
+            saveGame.setStateGameSaved(false);
             if (bDialog == false) {
                 dialogScore(getContext());
                 bDialog = true;
@@ -479,8 +437,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             clickCase = true;
         }
 
-
-
+        if (((Game)getContext()).stateSound) ((Game)getContext()).buttonSound.start();
 
         invalidate();
 
@@ -522,8 +479,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
 
 
-        int secondes = ((Game)getContext()).chrono.getSecondes();
-        int minutes = ((Game)getContext()).chrono.getMinutes();
+        secondes = ((Game)getContext()).chrono.getSecondes();
+        minutes = ((Game)getContext()).chrono.getMinutes();
         score = minutes + " : " + secondes;
         if (minutes < 10 && secondes < 10)
         {
@@ -545,174 +502,52 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_score);
         dialog.setTitle("Partie Terminée");
-        TextView tv_score = (TextView) dialog.findViewById(R.id.tv_score);
+        tv_score = (TextView) dialog.findViewById(R.id.tv_score);
         tv_score.setText("Score :    " + score);
 
         tv_level = (TextView) dialog.findViewById(R.id.tv_level);
-        TextView tv_best_score = (TextView) dialog.findViewById(R.id.tv_best_score);
+        tv_best_score = (TextView) dialog.findViewById(R.id.tv_best_score);
 
 
         Button btn_main = (Button) dialog.findViewById(R.id.btn_main);
 
 
+        if (typeLevel == 0)
+        {
 
+            if (saveGame.getSaveLevelName() == ((Game)getContext()).facile)
+            {
+                dialogFacile();
+            } else if (saveGame.getSaveLevelName() == ((Game)getContext()).moyen) {
+                dialogMoyen();
+            } else {
+                dialogDifficile();
+            }
+        }
         if (typeLevel == 1)
         {
-            tv_level.setText("Niveau Facile");
-
-            strBestScoreEasy = sharedPref.getString(KeyBestScoreEasy, "00 : 00");
-            int bestScoreSecondes = sharedPref.getInt(keyBestScoreEasySecondes, 0);
-            int bestScoreMinutes = sharedPref.getInt(keyBestScoreEasyMinutes, 0);
-
-
-
-            if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
-            {
-
-                bestScoreSecondes = secondes;
-                bestScoreMinutes = minutes;
-
-                strBestScoreEasy = score;
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyBestScoreEasy, strBestScoreEasy);
-                editor.commit();
-                editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
-                editor.commit();
-                editor.putInt(keyBestScoreEasyMinutes, bestScoreMinutes);
-                editor.commit();
-            }
-
-
-            if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
-
-                bestScoreSecondes = secondes;
-                bestScoreMinutes = minutes;
-                if (bestScoreMinutes < 10 )
-                {
-                    score = "0" + minutes + " : " + secondes;
-                }
-                strBestScoreEasy = score;
-                tv_score.setText("Nouveau Record : " + strBestScoreEasy);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyBestScoreEasy, strBestScoreEasy);
-                editor.commit();
-
-                editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
-                editor.commit();
-                editor.putInt(keyBestScoreEasyMinutes, bestScoreMinutes);
-                editor.commit();
-            }
-
-
-            strBestScoreEasy = sharedPref.getString(KeyBestScoreEasy, "00 : 00");
-            tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreEasy, "00 : 00"));
-
+            dialogFacile();
         }
 
 
         if (typeLevel == 2)
         {
-            tv_level.setText("Niveau Moyen");
-
-            strBestScoreMedium = sharedPref.getString(KeyBestScoreMedium, "00 : 00");
-            int bestScoreSecondes = sharedPref.getInt(keyBestScoreMediumSecondes, 0);
-            int bestScoreMinutes = sharedPref.getInt(keyBestScoreMediumMinutes, 0);
-
-
-
-            if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
-            {
-
-                bestScoreSecondes = secondes;
-                bestScoreMinutes = minutes;
-                strBestScoreMedium = score;
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyBestScoreMedium, strBestScoreMedium);
-                editor.commit();
-                editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
-                editor.commit();
-                editor.putInt(keyBestScoreMediumMinutes, bestScoreMinutes);
-                editor.commit();
-
-            }
-
-
-            if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
-                bestScoreSecondes = secondes;
-                bestScoreMinutes = minutes;
-                strBestScoreMedium = score;
-                tv_score.setText("Nouveau Record :   " + strBestScoreMedium);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyBestScoreMedium, strBestScoreMedium);
-                editor.commit();
-
-                editor.putInt(keyBestScoreMediumSecondes, bestScoreSecondes);
-                editor.commit();
-                editor.putInt(keyBestScoreMediumMinutes, bestScoreMinutes);
-                editor.commit();
-
-            }
-
-
-            strBestScoreMedium = sharedPref.getString(KeyBestScoreMedium, "00 : 00");
-            tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreMedium, "00 : 00"));
-
+            dialogMoyen();
         }
 
 
         if (typeLevel == 3)
         {
-            tv_level.setText("Niveau Difficile");
-
-            strBestScoreHard = sharedPref.getString(KeyBestScoreHard, "00 : 00");
-            int bestScoreSecondes = sharedPref.getInt(keyBestScoreHardSecondes, 0);
-            int bestScoreMinutes = sharedPref.getInt(keyBestScoreHardMinutes, 0);
-
-
-
-            if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
-            {
-
-                bestScoreSecondes = secondes;
-                bestScoreMinutes = minutes;
-                strBestScoreHard= score;
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyBestScoreHard, strBestScoreHard);
-                editor.commit();
-                editor.putInt(keyBestScoreHardSecondes, bestScoreSecondes);
-                editor.commit();
-                editor.putInt(keyBestScoreHardMinutes, bestScoreMinutes);
-                editor.commit();
-
-            }
-
-
-            if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
-                bestScoreSecondes = secondes;
-                bestScoreMinutes = minutes;
-                strBestScoreHard= score;
-                tv_score.setText("Nouveau Record :   " + strBestScoreHard);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(KeyBestScoreHard, strBestScoreHard);
-                editor.commit();
-
-                editor.putInt(keyBestScoreHardMinutes, bestScoreSecondes);
-                editor.commit();
-                editor.putInt(keyBestScoreHardMinutes, bestScoreMinutes);
-                editor.commit();
-
-            }
-
-
-            strBestScoreMedium = sharedPref.getString(KeyBestScoreHard, "00 : 00");
-            tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreHard, "00 : 00"));
-
+            dialogDifficile();
         }
 
 
         btn_main.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (((Game)getContext()).stateSound) ((Game)getContext()).buttonSound.start();
+
                 Intent i = new Intent(getContext(), MainActivity.class);
                 getContext().startActivity(i);
                 ((Game) getContext()).finish();
@@ -727,6 +562,159 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         Window window = dialog.getWindow();
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
+
+    }
+
+
+
+    public void dialogFacile()
+    {
+        tv_level.setText("Niveau Facile");
+
+        strBestScoreEasy = sharedPref.getString(KeyBestScoreEasy, "00 : 00");
+        int bestScoreSecondes = sharedPref.getInt(keyBestScoreEasySecondes, 0);
+        int bestScoreMinutes = sharedPref.getInt(keyBestScoreEasyMinutes, 0);
+
+
+
+        if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
+        {
+
+            bestScoreSecondes = secondes;
+            bestScoreMinutes = minutes;
+
+            strBestScoreEasy = score;
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(KeyBestScoreEasy, strBestScoreEasy);
+            editor.commit();
+            editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
+            editor.commit();
+            editor.putInt(keyBestScoreEasyMinutes, bestScoreMinutes);
+            editor.commit();
+        }
+
+
+        if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
+
+            bestScoreSecondes = secondes;
+            bestScoreMinutes = minutes;
+            if (bestScoreMinutes < 10 )
+            {
+                score = "0" + minutes + " : " + secondes;
+            }
+            strBestScoreEasy = score;
+            tv_score.setText("Nouveau Record : " + strBestScoreEasy);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(KeyBestScoreEasy, strBestScoreEasy);
+            editor.commit();
+
+            editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
+            editor.commit();
+            editor.putInt(keyBestScoreEasyMinutes, bestScoreMinutes);
+            editor.commit();
+        }
+
+
+        strBestScoreEasy = sharedPref.getString(KeyBestScoreEasy, "00 : 00");
+        tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreEasy, "00 : 00"));
+
+    }
+
+    public void dialogMoyen()
+    {
+        tv_level.setText("Niveau Moyen");
+
+        strBestScoreMedium = sharedPref.getString(KeyBestScoreMedium, "00 : 00");
+        int bestScoreSecondes = sharedPref.getInt(keyBestScoreMediumSecondes, 0);
+        int bestScoreMinutes = sharedPref.getInt(keyBestScoreMediumMinutes, 0);
+
+
+
+        if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
+        {
+
+            bestScoreSecondes = secondes;
+            bestScoreMinutes = minutes;
+            strBestScoreMedium = score;
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(KeyBestScoreMedium, strBestScoreMedium);
+            editor.commit();
+            editor.putInt(keyBestScoreEasySecondes, bestScoreSecondes);
+            editor.commit();
+            editor.putInt(keyBestScoreMediumMinutes, bestScoreMinutes);
+            editor.commit();
+
+        }
+
+
+        if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
+            bestScoreSecondes = secondes;
+            bestScoreMinutes = minutes;
+            strBestScoreMedium = score;
+            tv_score.setText("Nouveau Record :   " + strBestScoreMedium);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(KeyBestScoreMedium, strBestScoreMedium);
+            editor.commit();
+
+            editor.putInt(keyBestScoreMediumSecondes, bestScoreSecondes);
+            editor.commit();
+            editor.putInt(keyBestScoreMediumMinutes, bestScoreMinutes);
+            editor.commit();
+
+        }
+
+
+        strBestScoreMedium = sharedPref.getString(KeyBestScoreMedium, "00 : 00");
+        tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreMedium, "00 : 00"));
+
+    }
+
+    public void dialogDifficile()
+    {
+        tv_level.setText("Niveau Difficile");
+
+        strBestScoreHard = sharedPref.getString(KeyBestScoreHard, "00 : 00");
+        int bestScoreSecondes = sharedPref.getInt(keyBestScoreHardSecondes, 0);
+        int bestScoreMinutes = sharedPref.getInt(keyBestScoreHardMinutes, 0);
+
+
+
+        if (bestScoreSecondes == 0 && bestScoreMinutes == 0)
+        {
+
+            bestScoreSecondes = secondes;
+            bestScoreMinutes = minutes;
+            strBestScoreHard= score;
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(KeyBestScoreHard, strBestScoreHard);
+            editor.commit();
+            editor.putInt(keyBestScoreHardSecondes, bestScoreSecondes);
+            editor.commit();
+            editor.putInt(keyBestScoreHardMinutes, bestScoreMinutes);
+            editor.commit();
+
+        }
+
+
+        if (minutes < bestScoreMinutes || (secondes < bestScoreSecondes && minutes == bestScoreMinutes)) {
+            bestScoreSecondes = secondes;
+            bestScoreMinutes = minutes;
+            strBestScoreHard= score;
+            tv_score.setText("Nouveau Record :   " + strBestScoreHard);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(KeyBestScoreHard, strBestScoreHard);
+            editor.commit();
+
+            editor.putInt(keyBestScoreHardMinutes, bestScoreSecondes);
+            editor.commit();
+            editor.putInt(keyBestScoreHardMinutes, bestScoreMinutes);
+            editor.commit();
+
+        }
+
+
+        strBestScoreMedium = sharedPref.getString(KeyBestScoreHard, "00 : 00");
+        tv_best_score.setText("Meilleur Score :    " + sharedPref.getString(KeyBestScoreHard, "00 : 00"));
 
     }
 }

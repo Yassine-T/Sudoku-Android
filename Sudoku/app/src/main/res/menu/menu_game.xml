@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/save_game"
+        android:orderInCategory="100"
+        android:title="Sauvegarder la partie"
+        android:icon="@android:drawable/ic_menu_save"
+        app:showAsAction="always"/>
+
+    <item android:title="Son">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/enable_sound"
+                    android:icon="@mipmap/ic_sound"
+                    android:title="Activer" />
+                <item
+                    android:id="@+id/disable_sound"
+                    android:icon="@mipmap/ic_no_sound"
+                    android:title="Desactiver" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

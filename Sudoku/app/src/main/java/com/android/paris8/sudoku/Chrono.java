@@ -16,10 +16,12 @@ public class Chrono extends Checker implements Runnable{
     private int minutes;
     private long mLastPause;
     boolean pause = false;
+    SaveGame saveGame;
 
 
     public Chrono(Context mContext) {
         this.mContext = mContext;
+        saveGame = new SaveGame(mContext);
     }
 
     public Chrono(Context context, long startTime) {
@@ -32,11 +34,6 @@ public class Chrono extends Checker implements Runnable{
             mStartTime = System.currentTimeMillis();
         }
         mIsRunning = true;
-    }
-
-    public void pause()
-    {
-
     }
 
     public void stop()
@@ -63,8 +60,21 @@ public class Chrono extends Checker implements Runnable{
     @Override
     public void run() {
         long since = 0;
+        boolean save = saveGame.getStateGameSaved();
         while (mIsRunning)
         {
+
+            if (saveGame.getClickBtnSave()) {
+                saveGame.setSaveTime(since);
+
+                saveGame.setClickBtnSave(false);
+            }
+
+
+            if (GameView.typeLevel == 0 && save == true) {
+                mStartTime = System.currentTimeMillis() - saveGame.getSaveTime();
+                save = false;
+            }
 
             if (pause == true)
             {

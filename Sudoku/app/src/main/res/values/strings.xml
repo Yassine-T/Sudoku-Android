@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Sudoku</string>
+    <string name="regle_du_jeu">Règle du jeu</string>
+    <string name="description_regle">	Une partie de sudoku commence avec une grille
+        (une grille peut être composé seulement de chiffre compris entre 1 et 9) dans laquelle
+        un certain nombre de numéros sont déjà placés en fonction de la difficulté de la partie.
+        La grille est complète lorsque tous les chiffres de 1 à 9 apparaissent une seul fois dans
+        chacune des neuf lignes, des neuf colonnes et des neuf blocs.</string>
 </resources>

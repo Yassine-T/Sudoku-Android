@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+        <item
+            android:id="@+id/regle_du_jeu"
+            android:icon="@drawable/abc_btn_check_to_on_mtrl_015"
+            android:title="Règle du jeu" />
+
+
+
+    <item android:title="Son">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/enable_sound"
+                    android:icon="@mipmap/ic_sound"
+                    android:title="Activer" />
+                <item
+                    android:id="@+id/disable_sound"
+                    android:icon="@mipmap/ic_no_sound"
+                    android:title="Desactiver" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/about"
+        android:title="À propos" />
+
+</menu>
